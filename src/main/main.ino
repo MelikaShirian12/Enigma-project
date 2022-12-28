@@ -1,32 +1,16 @@
 #include <SoftwareSerial.h>
 SoftwareSerial esp8266(2,3);// 2 ->RX   3->TX
 
-class MyMap{
-
-//  vector<int> s;
-
-};
-
-class Entry{
-
-  private:
-    char key;
-    char value;
-
-    Entry(char key , char value){
-
-      this->key = key;
-      this->value= value;
-    }
-
-   
-    
-};
 
 void setup() {
   // put your setup code here, to run once:
   esp8266.begin(115200);
   Serial.begin(9600);
+  
+  esp8266.println("AT+CIPMUX=1");
+  delay(2000);
+  esp8266.println("AT+CIPSERVER=1,8888");
+
 }
 
 void loop() {
