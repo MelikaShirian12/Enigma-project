@@ -26,12 +26,13 @@ from collections import deque
 
 class Code:
 
-    def __int__(self, date, rotor1, rotor2, rotor3, plugboard):
+    def __int__(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
         self.date = date
         self.rotor1 = rotor1
         self.rotor2 = rotor2
         self.rotor3 = rotor3
         self.plugboard = plugboard
+        self.reflector = reflector
 
 
 
@@ -80,7 +81,27 @@ class Entry:
     def __init__(self, key, value):
         self.key = key
         self.value = value
+class Files:
+    def getData(self , date):
+        code_info = list()
+        check = False
+
+        file = open('D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt')
+        for line in file:
+            if line.startswith('Date: ' + date):
+                check = True
+                continue
+            if check and line.startswith('PlugBoard:'):
+                code_info.append(line[line.find('[') + 1 : line.find(']')])
+            elif check and line.startswith('Rotor1:'):
+                code_info.append(line[line.find('[') + 1 : line.find(']')])
+            elif check and line.startswith('Rotor2:'):
+                code_info.append(line[line.find('[') + 1 : line.find(']')])
+            elif check and line.startswith('Rotor3:'):
+                code_info.append(line[line.find('[') + 1 : line.find(']')])
+                break
+        return code_info
 
 
-
-
+tmp = Files()
+print(tmp.getData('1943/3/5'))
