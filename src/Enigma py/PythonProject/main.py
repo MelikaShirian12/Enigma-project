@@ -51,7 +51,7 @@ class MyMap:
 
         for i in range(len(keyCharacters)):
             new_entry = Entry(keyCharacters[i], valueCharacters[i])
-            self.table.add(new_entry)
+            self.table.append(new_entry)
 
 
         return self.table
@@ -87,7 +87,7 @@ class Files:
         code_info = list()
         check = False
 
-        file = open('D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt')
+        file = open('D:\\university\\programs-data struct\\github projects\\enigma pro\\Enigma-project\\Files\\EnigmaFile.txt')
         for line in file:
             if line.startswith('Date: ' + date):
                 check = True
@@ -136,10 +136,17 @@ def get_code(date ,code):
 
     code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
 
-    fjhjkljhgfghjkl;';lkjgfdfgjkl;' \
+    deciphered_code = decipher(code ,code_class)
 
 
+    return deciphered_code
 
-#def decipher(text_code , code_class):
 
+def decipher(text_code, code_class):
+
+    rotor1_rotation = 0
+    rotor2_rotation = 0
+    rotor3_rotation = 0
+
+    return null
 
