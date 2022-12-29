@@ -82,7 +82,8 @@ class Entry:
         self.key = key
         self.value = value
 class Files:
-    def getData(self , date):
+
+    def getData(self, date):
         code_info = list()
         check = False
 
@@ -92,16 +93,53 @@ class Files:
                 check = True
                 continue
             if check and line.startswith('PlugBoard:'):
-                code_info.append(line[line.find('[') + 1 : line.find(']')])
+                code_info.append(line[line.find('[') + 1: line.find(']')])
             elif check and line.startswith('Rotor1:'):
-                code_info.append(line[line.find('[') + 1 : line.find(']')])
+                code_info.append(line[line.find('[') + 1: line.find(']')])
             elif check and line.startswith('Rotor2:'):
-                code_info.append(line[line.find('[') + 1 : line.find(']')])
+                code_info.append(line[line.find('[') + 1: line.find(']')])
             elif check and line.startswith('Rotor3:'):
-                code_info.append(line[line.find('[') + 1 : line.find(']')])
+                code_info.append(line[line.find('[') + 1: line.find(']')])
                 break
         return code_info
 
 
-tmp = Files()
-print(tmp.getData('1943/3/5'))
+
+#making the code of a special date and encipher it
+def get_code(date ,code):
+
+    #making maps
+
+    key_list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    date_info = Files()
+    date_info_list = date_info.getData(date)
+
+
+    plugboard = MyMap()
+    plugboard.hash_function(key_list, date_info_list[0])
+
+    rotor1 = MyMap()
+    rotor1.hash_function(key_list, date_info_list[1])
+
+    rotor2 = MyMap()
+    rotor2.hash_function(key_list, date_info_list[2])
+
+    rotor3 = MyMap()
+    rotor3.hash_function(key_list, date_info_list[3])
+
+    reflector = MyMap()
+    reflector.hash_function(key_list, key_list[::-1])
+
+
+    #initializing the code class
+
+    code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
+
+    fjhjkljhgfghjkl;';lkjgfdfgjkl;' \
+
+
+
+#def decipher(text_code , code_class):
+
+
