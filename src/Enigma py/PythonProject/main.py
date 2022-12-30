@@ -129,9 +129,9 @@ def get_code(date ,code):
     date_info = Files()
     date_info_list = date_info.getData(date)
 
+
     plugboard = MyMap()
     plugboard.hash_function(key_list, date_info_list[0])
-
 
     rotor1 = MyMap()
     rotor1.hash_function(key_list, date_info_list[1])
@@ -162,5 +162,45 @@ def decipher(text_code, code_class):
     rotor2_rotation = 0
     rotor3_rotation = 0
 
-    return 0
+    new_text = list()
+
+    for i in range(text_code):
+
+        #before reflection:
+        #these should be value because they are the keys of the next reflector
+        entry = MyMap(code_class.plugboard).find_value(text_code[i])
+        entry = MyMap(code_class.rotor3).find_key(entry.value)
+        entry = MyMap(code_class.rotor2).find_key(entry.value)
+        entry = MyMap(code_class.rotor1).find_key(entry.value)
+
+        #after reflection
+
+        entry = MyMap(code_class.reflector).find_key(entry.value)
+
+        entry = MyMap(code_class.rotor1).find_value(entry.value)
+        entry = MyMap(code_class.rotor2).find_value(entry.key)
+        entry = MyMap(code_class.rotor3).find_value(entry.key)
+
+        entry = MyMap(code_class.plugboard).find_value(entry.key)
+
+
+        new_text.append(entry.key)
+
+        if rotor3_rotation < 26:
+            rotor3_rotation += 1
+            MyMap (code_class.rotor3).rotation()
+        elif rotor2_rotation < 26:
+            rotor2_rotation += 1
+            MyMap(code_class.rotor2).rotation()
+        elif rotor1_rotation < 26:
+            rotor1_rotation += 1
+            MyMap(code_class.rotor1).rotation()
+        else:
+            rotor3_rotation = 1
+            rotor2_rotation = 0
+            rotor1_rotation = 0
+
+            MyMap(code_class.rotor3).rotation()
+
+    return new_text
 
