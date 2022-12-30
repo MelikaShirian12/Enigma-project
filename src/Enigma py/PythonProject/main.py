@@ -172,39 +172,39 @@ def decipher(text_code, code_class):
 
         #before reflection:
         #these should be value because they are the keys of the next reflector
-        entry = MyMap(code_class.plugboard).find_value(text_code[i])
-        entry = MyMap(code_class.rotor3).find_key(entry.value)
-        entry = MyMap(code_class.rotor2).find_key(entry.value)
-        entry = MyMap(code_class.rotor1).find_key(entry.value)
+        entry = code_class.plugboard.find_value(text_code[i])
+        entry = code_class.rotor3.find_key(entry.value)
+        entry = code_class.rotor2.find_key(entry.value)
+        entry = code_class.rotor1.find_key(entry.value)
 
         #after reflection
 
-        entry = MyMap(code_class.reflector).find_key(entry.value)
+        entry = code_class.reflector.find_key(entry.value)
 
-        entry = MyMap(code_class.rotor1).find_value(entry.value)
-        entry = MyMap(code_class.rotor2).find_value(entry.key)
-        entry = MyMap(code_class.rotor3).find_value(entry.key)
+        entry = code_class.rotor1.find_value(entry.value)
+        entry = code_class.rotor2.find_value(entry.key)
+        entry = code_class.rotor3.find_value(entry.key)
 
-        entry = MyMap(code_class.plugboard).find_value(entry.key)
+        entry = code_class.plugboard.find_value(entry.key)
 
 
         new_text.append(entry.key)
 
         if rotor3_rotation < 26:
             rotor3_rotation += 1
-            MyMap (code_class.rotor3).rotation()
+            code_class.rotor3.rotation()
         elif rotor2_rotation < 26:
             rotor2_rotation += 1
-            MyMap(code_class.rotor2).rotation()
+            code_class.rotor2.rotation()
         elif rotor1_rotation < 26:
             rotor1_rotation += 1
-            MyMap(code_class.rotor1).rotation()
+            code_class.rotor1.rotation()
         else:
             rotor3_rotation = 1
             rotor2_rotation = 0
             rotor1_rotation = 0
 
-            MyMap(code_class.rotor3).rotation()
+            code_class.rotor3.rotation()
 
     return new_text
 
