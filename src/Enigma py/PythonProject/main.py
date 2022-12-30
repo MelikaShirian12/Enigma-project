@@ -105,6 +105,20 @@ class Files:
 
 
 
+def make_plug_board_value(code, plugboard):
+    tmp_list = str(plugboard).split(' ')
+    tmp_list = str(tmp_list).split(',')
+    code = list(code)
+    for j in range(code):
+        for i in range(0,len(tmp_list),2):
+            if code[j] == tmp_list[i]:
+                code[i] == tmp_list[i + 1]
+                break
+    return str(code)
+
+
+
+
 #making the code of a special date and encipher it
 def get_code(date ,code):
 
@@ -115,9 +129,9 @@ def get_code(date ,code):
     date_info = Files()
     date_info_list = date_info.getData(date)
 
-
     plugboard = MyMap()
     plugboard.hash_function(key_list, date_info_list[0])
+
 
     rotor1 = MyMap()
     rotor1.hash_function(key_list, date_info_list[1])
@@ -148,5 +162,5 @@ def decipher(text_code, code_class):
     rotor2_rotation = 0
     rotor3_rotation = 0
 
-    return null
+    return 0
 
