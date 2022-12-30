@@ -1,8 +1,7 @@
-# import serial
-# import time
-#
-#
-# ArduinoSerial = serial.Serial('com7', 9600)
+import serial
+import time
+
+# ArduinoSerial = serial.Serial('com8', 9600)
 # time.sleep(2)
 # print(ArduinoSerial.readline())
 # print("Enter 1 to turn ON LED and 0 to turn OFF LED")
@@ -21,41 +20,37 @@
 #         print("LED turned OFF")
 #         time.sleep(1)
 from collections import deque
-
-
-
 class Code:
+    # def __int__(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
+    #     self.date = date
+    #     self.rotor1 = rotor1
+    #     self.rotor2 = rotor2
+    #     self.rotor3 = rotor3
+    #     self.plugboard = plugboard
+    #     self.reflector = reflector
 
-    def __int__(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
+    def setData(self ,date, rotor1, rotor2, rotor3, plugboard, reflector):
         self.date = date
         self.rotor1 = rotor1
         self.rotor2 = rotor2
         self.rotor3 = rotor3
         self.plugboard = plugboard
         self.reflector = reflector
-
-
-
-
 class MyMap:
 
     def __init__(self):
         self.table = []
-
 
     def hash_function(self,keyCharacters, valueCharacters):
 
         keyCharacters = list(keyCharacters)
         valueCharacters = list(valueCharacters)
 
-
         for i in range(len(keyCharacters)):
             new_entry = Entry(keyCharacters[i], valueCharacters[i])
             self.table.append(new_entry)
 
-
         return self.table
-
 
     def rotation(self):
         self.table =deque(self.table)
@@ -83,11 +78,13 @@ class Entry:
         self.value = value
 class Files:
 
+# Kianoosh's ---> D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt
+# Melika's --->  D:\\university\\programs-data struct\\github projects\\enigma pro\\Enigma-project\\Files\\EnigmaFile.txt
     def getData(self, date):
         code_info = list()
         check = False
 
-        file = open('D:\\university\\programs-data struct\\github projects\\enigma pro\\Enigma-project\\Files\\EnigmaFile.txt')
+        file = open('D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt')
         for line in file:
             if line.startswith('Date: ' + date):
                 check = True
@@ -106,10 +103,14 @@ class Files:
 
 
 def make_plug_board_value(code, plugboard):
-    tmp_list = str(plugboard).split(' ')
-    tmp_list = str(tmp_list).split(',')
+    plugboard = str(plugboard).upper()
+    tmp_list = list()
+    for i in plugboard:
+        if (i >= 'a' and i <= 'z') or (i >= 'A' and i <= 'Z'):
+            tmp_list.append(i)
+
     code = list(code)
-    for j in range(code):
+    for j in range(len(code)):
         for i in range(0,len(tmp_list),2):
             if code[j] == tmp_list[i]:
                 code[i] == tmp_list[i + 1]
@@ -131,7 +132,8 @@ def get_code(date ,code):
 
 
     plugboard = MyMap()
-    plugboard.hash_function(key_list, date_info_list[0])
+    tmp = make_plug_board_value(key_list , date_info_list[0])
+    plugboard.hash_function(key_list , tmp)
 
     rotor1 = MyMap()
     rotor1.hash_function(key_list, date_info_list[1])
@@ -148,7 +150,9 @@ def get_code(date ,code):
 
     #initializing the code class
 
-    code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
+    #code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
+    code_class = Code()
+    code_class.setData(date, rotor1, rotor2, rotor3, plugboard, reflector)
 
     deciphered_code = decipher(code ,code_class)
 
@@ -164,7 +168,7 @@ def decipher(text_code, code_class):
 
     new_text = list()
 
-    for i in range(text_code):
+    for i in range(len(text_code)):
 
         #before reflection:
         #these should be value because they are the keys of the next reflector
@@ -203,4 +207,38 @@ def decipher(text_code, code_class):
             MyMap(code_class.rotor3).rotation()
 
     return new_text
+
+
+#Main :
+date = str()
+data = str()
+date_check = bool(False)
+data_check = bool(False)
+ArduinoSerial = serial.Serial('com8',9600)
+time.sleep(2)
+print(ArduinoSerial.readline())
+read = ArduinoSerial.readline()
+while True:
+    if str(read).find(':') != -1:
+        print(str(read)[str(read).find(':') + 1 : str(read).index('\\')]) #is the sent value from Mobile
+        tmp = str(read)[str(read).find(':') + 1 : str(read).index('\\')]
+        if tmp.find('/') != -1:
+            date = tmp
+            date_check = True
+        else:
+            data = tmp
+            data_check = True
+
+    if date_check and data_check:
+
+        data = str(data).upper()
+        deciohered_code = get_code(date , data)
+        print(deciohered_code)
+
+
+        data_check = False
+        date_check = False
+        data = None
+        date = None
+    read = ArduinoSerial.readline()
 
