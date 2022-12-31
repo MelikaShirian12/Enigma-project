@@ -91,12 +91,16 @@ class Files:
                 continue
             if check and line.startswith('PlugBoard:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor1:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor2:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor3:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
                 break
         return code_info
 
@@ -113,9 +117,9 @@ def make_plug_board_value(code, plugboard):
     for j in range(len(code)):
         for i in range(0,len(tmp_list),2):
             if code[j] == tmp_list[i]:
-                code[i] == tmp_list[i + 1]
+                code[j] = tmp_list[i + 1]
                 break
-    return str(code)
+    return ''.join(code)
 
 
 
@@ -173,19 +177,19 @@ def decipher(text_code, code_class):
         #before reflection:
         #these should be value because they are the keys of the next reflector
         entry = code_class.plugboard.find_value(text_code[i])
-        entry = code_class.rotor3.find_key(entry.value)
-        entry = code_class.rotor2.find_key(entry.value)
-        entry = code_class.rotor1.find_key(entry.value)
+        entry = code_class.rotor3.find_value(entry.value)
+        entry = code_class.rotor2.find_value(entry.value)
+        entry = code_class.rotor1.find_value(entry.value)
 
         #after reflection
 
-        entry = code_class.reflector.find_key(entry.value)
+        entry = code_class.reflector.find_value(entry.value)
 
-        entry = code_class.rotor1.find_value(entry.value)
-        entry = code_class.rotor2.find_value(entry.key)
-        entry = code_class.rotor3.find_value(entry.key)
+        entry = code_class.rotor1.find_key(entry.value)
+        entry = code_class.rotor2.find_key(entry.key)
+        entry = code_class.rotor3.find_key(entry.key)
 
-        entry = code_class.plugboard.find_value(entry.key)
+        entry = code_class.plugboard.find_key(entry.key)
 
 
         new_text.append(entry.key)
@@ -233,7 +237,7 @@ while True:
 
         data = str(data).upper()
         deciohered_code = get_code(date , data)
-        print(deciohered_code)
+        print(''.join(deciohered_code))
 
 
         data_check = False
