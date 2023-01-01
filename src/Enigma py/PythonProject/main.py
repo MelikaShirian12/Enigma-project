@@ -43,8 +43,8 @@ class MyMap:
 
     def hash_function(self,keyCharacters, valueCharacters):
 
-        keyCharacters = list(keyCharacters)
-        valueCharacters = list(valueCharacters)
+        self.keyCharacters = list(keyCharacters)
+        self.valueCharacters = list(valueCharacters)
 
         for i in range(len(keyCharacters)):
             new_entry = Entry(keyCharacters[i], valueCharacters[i])
@@ -53,9 +53,11 @@ class MyMap:
         return self.table
 
     def rotation(self):
-        self.table =deque(self.table)
+        self.valueCharacters =deque(self.valueCharacters)
         #rotating it to the right one time
         self.table.rotate(1)
+
+        self.hash_function(self.keyCharacters,self.valueCharacters)
 
 
     def find_value(self , value):
