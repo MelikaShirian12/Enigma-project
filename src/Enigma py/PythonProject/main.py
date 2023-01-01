@@ -93,12 +93,16 @@ class Files:
                 continue
             if check and line.startswith('PlugBoard:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor1:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor2:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
             elif check and line.startswith('Rotor3:'):
                 code_info.append(line[line.find('[') + 1: line.find(']')])
+                code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
                 break
         return code_info
 
@@ -110,32 +114,31 @@ def make_plug_board_value(code, plugboard):
     for i in plugboard:
         if (i >= 'a' and i <= 'z') or (i >= 'A' and i <= 'Z'):
             tmp_list.append(i)
-
+# A F B M G H J C X E O P N R Z L
     code = list(code)
     for j in range(len(code)):
-        for i in range(0,len(tmp_list),2):
+        for i in range(0, len(tmp_list), 2):
             if code[j] == tmp_list[i]:
-                code[i] == tmp_list[i + 1]
+                code[j] = tmp_list[i + 1]
+            if code[j] == tmp_list[i + 1]:
+                code[j] = tmp_list[i]
                 break
-    return str(code)
+    return ''.join(code)
 
 
-
-
-#making the code of a special date and encipher it
-def get_code(date ,code):
-
-    #making maps
+# making the code of a special date and encipher it
+def get_code(date, code):
+    # making maps
 
     key_list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
+    #'DG, BF, MU, JC, KA, SY, HL, OX'
     date_info = Files()
     date_info_list = date_info.getData(date)
 
 
     plugboard = MyMap()
-    tmp = make_plug_board_value(key_list , date_info_list[0])
-    plugboard.hash_function(key_list , tmp)
+    tmp = make_plug_board_value(key_list, date_info_list[0])
+    plugboard.hash_function(key_list, tmp)
 
     rotor1 = MyMap()
     rotor1.hash_function(key_list, date_info_list[1])
@@ -149,14 +152,13 @@ def get_code(date ,code):
     reflector = MyMap()
     reflector.hash_function(key_list, key_list[::-1])
 
+    # initializing the code class
 
-    #initializing the code class
-
-    #code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
+    # code_class = Code(date, rotor1, rotor2, rotor3, plugboard, reflector)
     code_class = Code()
     code_class.setData(date, rotor1, rotor2, rotor3, plugboard, reflector)
 
-    deciphered_code = decipher(code ,code_class)
+    deciphered_code = decipher(code, code_class)
 
 
     return deciphered_code
