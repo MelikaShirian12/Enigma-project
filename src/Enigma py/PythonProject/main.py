@@ -20,8 +20,6 @@ import time
 #         print("LED turned OFF")
 #         time.sleep(1)
 from collections import deque
-
-
 class Code:
     # def __int__(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
     #     self.date = date
@@ -31,24 +29,22 @@ class Code:
     #     self.plugboard = plugboard
     #     self.reflector = reflector
 
-    def setData(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
+    def setData(self ,date, rotor1, rotor2, rotor3, plugboard, reflector):
         self.date = date
         self.rotor1 = rotor1
         self.rotor2 = rotor2
         self.rotor3 = rotor3
         self.plugboard = plugboard
         self.reflector = reflector
-
-
 class MyMap:
 
     def __init__(self):
         self.table = []
 
-    def hash_function(self, keyCharacters, valueCharacters):
+    def hash_function(self,keyCharacters, valueCharacters):
 
-        keyCharacters = list(keyCharacters)
-        valueCharacters = list(valueCharacters)
+        self.keyCharacters = list(keyCharacters)
+        self.valueCharacters = list(valueCharacters)
 
         for i in range(len(keyCharacters)):
             new_entry = Entry(keyCharacters[i], valueCharacters[i])
@@ -57,11 +53,14 @@ class MyMap:
         return self.table
 
     def rotation(self):
-        self.table = deque(self.table)
-        # rotating it to the right one time
-        self.table.rotate(1)
+        self.valueCharacters =deque(self.valueCharacters)
+        #rotating it to the right one time
+        self.valueCharacters.rotate(1)
 
-    def find_value(self, value):
+        self.hash_function(self.keyCharacters ,self.valueCharacters)
+
+
+    def find_value(self , value):
 
         for entry in self.table:
             if entry.value == value:
@@ -79,18 +78,15 @@ class Entry:
     def __init__(self, key, value):
         self.key = key
         self.value = value
-
-
 class Files:
 
-    # Kianoosh's ---> D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt
-    # Melika's --->  D:\\university\\programs-data struct\\github projects\\enigma pro\\Enigma-project\\Files\\EnigmaFile.txt
+# Kianoosh's ---> D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt
+# Melika's --->  D:\\university\\programs-data struct\\github projects\\enigma pro\\Enigma-project\\Files\\EnigmaFile.txt
     def getData(self, date):
         code_info = list()
         check = False
 
-        file = open(
-            'D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt')
+        file = open('D:\\Private\\uni\\Coding\\DS_ENIGMA_MACHINE\\Enigma-project\\Enigma-project\\Files\\EnigmaFile.txt')
         for line in file:
             if line.startswith('Date: ' + date):
                 check = True
@@ -109,6 +105,7 @@ class Files:
                 code_info[len(code_info) - 1] = str(code_info[len(code_info) - 1]).upper()
                 break
         return code_info
+
 
 
 def make_plug_board_value(code, plugboard):
@@ -138,6 +135,7 @@ def get_code(date, code):
     date_info = Files()
     date_info_list = date_info.getData(date)
 
+
     plugboard = MyMap()
     tmp = make_plug_board_value(key_list, date_info_list[0])
     plugboard.hash_function(key_list, tmp)
@@ -162,10 +160,12 @@ def get_code(date, code):
 
     deciphered_code = decipher(code, code_class)
 
+
     return deciphered_code
 
 
 def decipher(text_code, code_class):
+
     rotor1_rotation = 0
     rotor2_rotation = 0
     rotor3_rotation = 0
@@ -174,14 +174,14 @@ def decipher(text_code, code_class):
 
     for i in range(len(text_code)):
 
-        # before reflection:
-        # these should be value because they are the keys of the next reflector
+        #before reflection:
+        #these should be value because they are the keys of the next reflector
         entry = code_class.plugboard.find_key(text_code[i])
         entry = code_class.rotor3.find_key(entry.value)
         entry = code_class.rotor2.find_key(entry.value)
         entry = code_class.rotor1.find_key(entry.value)
 
-        # after reflection
+        #after reflection
 
         entry = code_class.reflector.find_key(entry.value)
 
@@ -190,6 +190,7 @@ def decipher(text_code, code_class):
         entry = code_class.rotor3.find_value(entry.key)
 
         entry = code_class.plugboard.find_value(entry.key)
+
 
         new_text.append(entry.key)
 
@@ -212,19 +213,19 @@ def decipher(text_code, code_class):
     return new_text
 
 
-# Main :
+#Main :
 date = str()
 data = str()
 date_check = bool(False)
 data_check = bool(False)
-ArduinoSerial = serial.Serial('com8', 9600)
+ArduinoSerial = serial.Serial('com8',9600)
 time.sleep(2)
 print(ArduinoSerial.readline())
 read = ArduinoSerial.readline()
 while True:
     if str(read).find(':') != -1:
-        print(str(read)[str(read).find(':') + 1: str(read).index('\\')])  # is the sent value from Mobile
-        tmp = str(read)[str(read).find(':') + 1: str(read).index('\\')]
+        print(str(read)[str(read).find(':') + 1 : str(read).index('\\')]) #is the sent value from Mobile
+        tmp = str(read)[str(read).find(':') + 1 : str(read).index('\\')]
         if tmp.find('/') != -1:
             date = tmp
             date_check = True
@@ -233,12 +234,15 @@ while True:
             data_check = True
 
     if date_check and data_check:
+
         data = str(data).upper()
-        deciohered_code = get_code(date, data)
-        print(''.join(deciohered_code))
+        deciohered_code = get_code(date , data)
+        print(deciohered_code)
+
 
         data_check = False
         date_check = False
         data = None
         date = None
     read = ArduinoSerial.readline()
+
