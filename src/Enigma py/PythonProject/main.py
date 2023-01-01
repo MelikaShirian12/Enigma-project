@@ -58,16 +58,16 @@ class MyMap:
         self.table.rotate(1)
 
 
-    def find_value(self , key):
-
-        for entry in self.table:
-            if entry.key == key:
-                return entry
-
-    def find_key(self, value):
+    def find_value(self , value):
 
         for entry in self.table:
             if entry.value == value:
+                return entry
+
+    def find_key(self, key):
+
+        for entry in self.table:
+            if entry.key == key:
                 return entry
 
 
@@ -176,20 +176,20 @@ def decipher(text_code, code_class):
 
         #before reflection:
         #these should be value because they are the keys of the next reflector
-        entry = code_class.plugboard.find_value(text_code[i])
-        entry = code_class.rotor3.find_value(entry.value)
-        entry = code_class.rotor2.find_value(entry.value)
-        entry = code_class.rotor1.find_value(entry.value)
+        entry = code_class.plugboard.find_key(text_code[i])
+        entry = code_class.rotor3.find_key(entry.value)
+        entry = code_class.rotor2.find_key(entry.value)
+        entry = code_class.rotor1.find_key(entry.value)
 
         #after reflection
 
-        entry = code_class.reflector.find_value(entry.value)
+        entry = code_class.reflector.find_key(entry.value)
 
-        entry = code_class.rotor1.find_key(entry.value)
-        entry = code_class.rotor2.find_key(entry.key)
-        entry = code_class.rotor3.find_key(entry.key)
+        entry = code_class.rotor1.find_value(entry.value)
+        entry = code_class.rotor2.find_value(entry.key)
+        entry = code_class.rotor3.find_value(entry.key)
 
-        entry = code_class.plugboard.find_key(entry.key)
+        entry = code_class.plugboard.find_value(entry.key)
 
 
         new_text.append(entry.key)
