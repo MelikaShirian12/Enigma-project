@@ -56,10 +56,8 @@ class MyMap:
         return self.table
 
     def rotation(self):
-        #self.valueCharacters = deque(self.valueCharacters)
+
         self.valueCharacters = MyRotate(self.valueCharacters , -1)
-        #rotating it to the right one time
-        #self.valueCharacters.rotate(1)
 
         self.hash_function(self.keyCharacters ,self.valueCharacters)
 
