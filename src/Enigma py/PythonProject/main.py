@@ -231,6 +231,11 @@ while True:
             data = input('Data : ').upper()
             deciohered_code = get_code(date, data)
             print(''.join(deciohered_code).lower())
+
+            ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
+            time.sleep(2)
+            ArduinoSerial.write(str.encode('Result is ' + ''.join(deciohered_code).lower()))
+            time.sleep(2)
             data_check = False
             date_check = False
             data = None
@@ -251,6 +256,10 @@ while True:
         deciohered_code = get_code(date , data)
         print(''.join(deciohered_code).lower())
 
+        ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
+        time.sleep(2)
+        ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower()))
+        time.sleep(2)
 
 
         data_check = False
