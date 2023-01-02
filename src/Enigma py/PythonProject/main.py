@@ -55,33 +55,11 @@ class MyMap:
 
         return self.table
 
-    def rotationRight(self):
-
-        # rotating it to the right one time
+    def rotation(self):
 
         self.valueCharacters = MyRotate(self.valueCharacters , -1)
 
         self.hash_function(self.keyCharacters ,self.valueCharacters)
-
-    def rotationLeft(self):
-
-        # rotating it to the right one time
-
-        self.valueCharacters = MyRotate(self.valueCharacters, 1)
-
-        self.hash_function(self.keyCharacters, self.valueCharacters)
-
-
-    def rotation(self , right_or_left):
-        if right_or_left:
-            self.rotationRight()
-        else:
-            self.rotationLeft()
-
-
-
-
-
 
 
     def find_value(self , value):
@@ -89,7 +67,6 @@ class MyMap:
         for entry in self.table:
             if entry.value == value:
                 return entry
-
 
     def find_key(self, key):
 
@@ -196,8 +173,6 @@ def decipher(text_code, code_class):
 
     new_text = list()
 
-    rotate_right_left = True
-
     for i in range(len(text_code)):
         #'DG, BF, MU, JC, KA, SY, HL, OX'
         #before reflection:
@@ -222,21 +197,13 @@ def decipher(text_code, code_class):
 
         if rotor3_rotation < 26:
             rotor3_rotation += 1
-            code_class.rotor3.rotation(rotate_right_left)
-            if rotor3_rotation == 26:
-                rotate_right_left = not rotate_right_left
-
+            code_class.rotor3.rotation()
         elif rotor2_rotation < 26:
             rotor2_rotation += 1
-            code_class.rotor2.rotation(rotate_right_lefti)
-            if rotor2_rotation == 26:
-                rotate_right_left = not rotate_right_left
-
+            code_class.rotor2.rotation()
         elif rotor1_rotation < 26:
             rotor1_rotation += 1
-            code_class.rotor1.rotation(rotate_right_left)
-            if rotor1_rotation == 26:
-                rotate_right_left = not rotate_right_left
+            code_class.rotor1.rotation()
         else:
             rotor3_rotation = 1
             rotor2_rotation = 0
