@@ -20,6 +20,8 @@ import time
 #         print("LED turned OFF")
 #         time.sleep(1)
 from collections import deque
+def MyRotate(l, n):
+    return l[n:] + l[:n]
 class Code:
     # def __int__(self, date, rotor1, rotor2, rotor3, plugboard, reflector):
     #     self.date = date
@@ -42,6 +44,7 @@ class MyMap:
         self.table = []
 
     def hash_function(self,keyCharacters, valueCharacters):
+        self.table = list()
 
         self.keyCharacters = list(keyCharacters)
         self.valueCharacters = list(valueCharacters)
@@ -53,9 +56,10 @@ class MyMap:
         return self.table
 
     def rotation(self):
-        self.valueCharacters =deque(self.valueCharacters)
+        #self.valueCharacters = deque(self.valueCharacters)
+        self.valueCharacters = MyRotate(self.valueCharacters , -1)
         #rotating it to the right one time
-        self.valueCharacters.rotate(1)
+        #self.valueCharacters.rotate(1)
 
         self.hash_function(self.keyCharacters ,self.valueCharacters)
 
@@ -114,13 +118,12 @@ def make_plug_board_value(code, plugboard):
     for i in plugboard:
         if (i >= 'a' and i <= 'z') or (i >= 'A' and i <= 'Z'):
             tmp_list.append(i)
-# A F B M G H J C X E O P N R Z L
     code = list(code)
     for j in range(len(code)):
         for i in range(0, len(tmp_list), 2):
             if code[j] == tmp_list[i]:
                 code[j] = tmp_list[i + 1]
-            if code[j] == tmp_list[i + 1]:
+            elif code[j] == tmp_list[i + 1]:
                 code[j] = tmp_list[i]
                 break
     return ''.join(code)
@@ -173,7 +176,7 @@ def decipher(text_code, code_class):
     new_text = list()
 
     for i in range(len(text_code)):
-
+        #'DG, BF, MU, JC, KA, SY, HL, OX'
         #before reflection:
         #these should be value because they are the keys of the next reflector
         entry = code_class.plugboard.find_key(text_code[i])
@@ -237,7 +240,7 @@ while True:
 
         data = str(data).upper()
         deciohered_code = get_code(date , data)
-        print(deciohered_code)
+        print(''.join(deciohered_code).lower())
 
 
         data_check = False
