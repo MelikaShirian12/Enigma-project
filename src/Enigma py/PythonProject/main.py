@@ -136,7 +136,6 @@ def get_code(date, code):
     date_info = Files()
     date_info_list = date_info.getData(date)
 
-
     plugboard = MyMap()
     tmp = make_plug_board_value(key_list, date_info_list[0])
 
@@ -229,17 +228,21 @@ while True:
         if tmp == 'python':
             date = input('Date : ')
             data = input('Data : ').upper()
-            deciohered_code = get_code(date, data)
-            print(''.join(deciohered_code).lower())
-
-            ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
-            time.sleep(2)
-            ArduinoSerial.write(str.encode('Result is ' + ''.join(deciohered_code).lower()))
-            time.sleep(2)
-            data_check = False
-            date_check = False
-            data = None
-            date = None
+            try:
+                deciohered_code = get_code(date, data)
+                print(''.join(deciohered_code).lower())
+                ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
+                time.sleep(2)
+                ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower()))
+                time.sleep(2)
+                data_check = False
+                date_check = False
+                data = None
+                date = None
+            except IndexError:
+                print('Date does not exist!')
+            except:
+                print('Entered data is not valid!')
 
         elif tmp.find('/') != -1:
             date = tmp
@@ -253,18 +256,28 @@ while True:
         data = str(data).upper()
         print('Date : ' + date)
         print('Data : ' + data)
-        deciohered_code = get_code(date , data)
-        print(''.join(deciohered_code).lower())
+        try:
+            deciohered_code = get_code(date , data)
+            print(''.join(deciohered_code).lower())
+            ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12))) # to send order ro arduino for sending data
+            time.sleep(2)
+            ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower())) # sending data to arduino
+            time.sleep(2)
 
-        ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
-        time.sleep(2)
-        ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower()))
-        time.sleep(2)
 
-
-        data_check = False
-        date_check = False
-        data = None
-        date = None
+            data_check = False
+            date_check = False
+            data = None
+            date = None
+        except IndexError : # if date is not valid
+            print('Date does not exist!')
+        except :
+            print('Entered data is not valid!') # if data is not valid
     read = ArduinoSerial.readline() #to get next from mobile
 
+
+
+# Made by Melika Shirian and Kianoosh Vadaei
+# For UI-DS Enigma Machine mini_project
+#2023/1/3
+#:)
