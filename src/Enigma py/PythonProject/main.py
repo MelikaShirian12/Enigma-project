@@ -233,7 +233,7 @@ while True:
                 print(''.join(deciohered_code).lower())
                 ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
                 time.sleep(2)
-                ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower()))
+                ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).upper()))
                 time.sleep(2)
                 data_check = False
                 date_check = False
@@ -261,7 +261,7 @@ while True:
             print(''.join(deciohered_code).lower())
             ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12))) # to send order ro arduino for sending data
             time.sleep(2)
-            ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).lower())) # sending data to arduino
+            ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).upper())) # sending data to arduino
             time.sleep(2)
 
 
