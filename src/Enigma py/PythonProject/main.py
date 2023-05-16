@@ -60,7 +60,7 @@ class MyMap:
         self.valueCharacters = MyRotate(self.valueCharacters , -1)
 
         self.hash_function(self.keyCharacters ,self.valueCharacters)
-
+        #print(self.keyCharacters , self.valueCharacters)
 
     def find_value(self , value):
 
@@ -136,9 +136,9 @@ def get_code(date, code):
     date_info = Files()
     date_info_list = date_info.getData(date)
 
-
     plugboard = MyMap()
     tmp = make_plug_board_value(key_list, date_info_list[0])
+
     plugboard.hash_function(key_list, tmp)
 
     rotor1 = MyMap()
@@ -222,9 +222,29 @@ print(ArduinoSerial.readline())
 read = ArduinoSerial.readline()
 while True:
     if str(read).find(':') != -1:
-        print(str(read)[str(read).find(':') + 1 : str(read).index('\\')]) #is the sent value from Mobile
-        tmp = str(read)[str(read).find(':') + 1 : str(read).index('\\')]
-        if tmp.find('/') != -1:
+        #print(str(read)[str(read).find(':') + 1 : str(read).index('\\')]) #is the sent value from Mobile
+        print('RECEIVED!')
+        tmp = str(read)[str(read).find(':') + 1 : str(read).index('\\')] #is the sent value from Mobile
+        if tmp == 'python':
+            date = input('Date : ')
+            data = input('Data : ').upper()
+            try:
+                deciohered_code = get_code(date, data)
+                print(''.join(deciohered_code).lower())
+                ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12)))
+                time.sleep(2)
+                ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).upper()))
+                time.sleep(2)
+                data_check = False
+                date_check = False
+                data = None
+                date = None
+            except IndexError:
+                print('Date does not exist!')
+            except:
+                print('Entered data is not valid!')
+
+        elif tmp.find('/') != -1:
             date = tmp
             date_check = True
         else:
@@ -234,13 +254,30 @@ while True:
     if date_check and data_check:
 
         data = str(data).upper()
-        deciohered_code = get_code(date , data)
-        print(''.join(deciohered_code).lower())
+        print('Date : ' + date)
+        print('Data : ' + data)
+        try:
+            deciohered_code = get_code(date , data)
+            print(''.join(deciohered_code).lower())
+            ArduinoSerial.write(str.encode('AT+CIPSEND=0,' + str(len(deciohered_code) + 12))) # to send order ro arduino for sending data
+            time.sleep(2)
+            ArduinoSerial.write(str.encode('Result is : ' + ''.join(deciohered_code).upper())) # sending data to arduino
+            time.sleep(2)
 
 
-        data_check = False
-        date_check = False
-        data = None
-        date = None
-    read = ArduinoSerial.readline()
+            data_check = False
+            date_check = False
+            data = None
+            date = None
+        except IndexError : # if date is not valid
+            print('Date does not exist!')
+        except :
+            print('Entered data is not valid!') # if data is not valid
+    read = ArduinoSerial.readline() #to get next from mobile
 
+
+
+# Made by Melika Shirian and Kianoosh Vadaei
+# For UI-DS Enigma Machine mini_project
+#2023/1/3
+#:)
